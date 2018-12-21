@@ -18,4 +18,7 @@ at any time, a client web browser can be run. The client enter a search term, an
  The server uses Mongodb and twitcurl (so the first step is to install both Mongodb and twitcurl on ubuntu)
  
  Then, cd build_dir, cmake .. and then make 
+ 
+ After running the server and opening a web browser using localhost:8080, we obtain this page:
+ 
 ![alt text](client_browser.png)
