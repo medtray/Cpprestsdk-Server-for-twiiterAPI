@@ -18,4 +18,4 @@ at any time, a client web browser can be run. The client enter a search term, an
  The server uses Mongodb and twitcurl (so the first step is to install both Mongodb and twitcurl on ubuntu)
  
  Then, cd build_dir, cmake .. and then make 
-![alt text](https://raw.githubusercontent.com/medtray/Cpprestsdk-Server-for-twiiterAPI/client_browser.png)
+![alt text](https://raw.githubusercontent.com/medtray/Cpprestsdk-Server-for-twiiterAPI/branch/client_browser.png)
