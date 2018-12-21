@@ -1,9 +1,7 @@
 # Cpprestsdk-Server-for-twiiterAPI
 * at any time, a client web browser can be run. The client enter a search term, and it will issue a query
  * against the Twitter API.  It will process the result set as follows:
- *     Produce a histogram from the top 100 results, matching number of tweets
- *     to dates.  Save this in a MongoDB collection.  The query
- *     term should be the document name.
+ *     Produce a histogram from the top 100 results, matching number of tweets to dates.  Save this in a MongoDB collection.  The query term should be the document name.
  * - Note: query terms that are user handles (@name) or hashtags (#tag) will
  *   naturally show user activity or topic trends
  * - Note: authentication for the Twitter API uses OAuth.
