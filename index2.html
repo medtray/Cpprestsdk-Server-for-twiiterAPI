@@ -1,0 +1,253 @@
+ <body background="https://www.abccopywriting.com/wp-content/uploads/2015/09/twitter.png" oncontextmenu="return false"> 
+    <!-- <body background="https://www.abccopywriting.com/wp-content/uploads/2015/09/twitter.png"> -->
+
+<head>
+        
+        <!-- Plotly.js -->
+                <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+                </head>
+                <!-- <body> -->
+
+                        <!-- <body style="background-color:yellowgreen;color:white;"> -->
+                                
+                                    
+
+                                
+                <!-- Plotly chart will be drawn inside this DIV -->
+                
+                <h1 style="color:rgb(255, 0, 55);">Twitter Trend Visualizer by Mohamed Trabelsi</h1>
+
+                <input type="text" id="query" />
+                <button id="search" style="color:rgb(0, 0, 0);">Plot Histogram</button>
+                <select id="granularity">
+                        <option value="1">year</option>
+                        <option value="2">monthly</option>
+                    <option value="3" selected="selected">daily</option>
+                    <option value="4">hour</option>
+                    <option value="5">minute</option>
+                    <option value="6">second</option>
+                  </select>
+                <br />
+                <br />
+                <input type="text" id="filename" />
+                <button id="download">Download file</button>
+                <br />
+                <br />
+                <input type="text" id="twitter_to_save" />
+                <button id="save_to_mongodb">Query twitter and Save to MongoDB</button>
+                <p id="demo"></p>
+                <p id="error"></p>
+                <div id="chart" style="margin-top: 5px; width:1350px; height:1000px;color:rgb(4, 0, 255);font-size:30;">Chart Area</div>
+                <!-- <div id="chart" style="margin-top: 10; width:1300px; height:600px;color:rgb(4, 0, 255);font-size:20;"><b>Chart Area</b></div> -->
+
+                <script>
+                let search = document.getElementById("search");
+                let query = document.getElementById("query");
+                let chart = document.getElementById("chart");
+                let filename = document.getElementById("filename");
+                let download = document.getElementById("download");
+                let twitter_to_save = document.getElementById("twitter_to_save");
+                let save_to_mongodb = document.getElementById("save_to_mongodb");
+                let option = document.getElementById("granularity");
+
+
+                search.addEventListener("click", function () {
+                    if (query.value)
+                    {
+                    var xhr = new XMLHttpRequest();
+                    var strUser = option.options[option.selectedIndex].text;
+
+    // we're calling search.php and passing in a query string
+
+    if ((query.value).charAt(0)=='#')
+{
+    var s = (query.value).substr(1);
+    var url = "http://localhost:8080/data/"+s+"/1/"+strUser;
+}
+
+else
+{
+    var url = "http://localhost:8080/data/"+query.value+"/0/"+strUser;
+}
+
+
+    
+   
+    xhr.onload = function() {
+        
+        if (xhr.status == 200) {
+            
+            var obj = JSON.parse(xhr.responseText);
+            
+            var y = [];
+            var x = [];
+            var i=-1;
+            for (var event in obj) {
+                i=i+1;
+                var dataCopy = obj[event];
+                y[i]=dataCopy;
+                x[i]=event;
+
+            }
+
+            var data = [
+                {
+                    
+                    x:x,
+                    y: y,
+                    type: 'bar',
+                    marker: {
+                    color: 'pink',
+                    },
+                }
+                ];
+
+                var layout = {
+                    title: 'Histogram of tweets',
+                    
+  autosize: false,
+  width: 1350,
+  height: 1000,
+  margin: {
+    l: 50,
+    r: 50,
+    b: 200,
+    t: 100,
+    pad: 4
+  },
+  paper_bgcolor: '#7f7f60',
+  plot_bgcolor: '#c7c7c0',
+  xaxis: {
+    title: 'Date',
+    titlefont: {
+      family: 'Courier New, monospace',
+      size: 18,
+      color: 'red'
+    }
+  },
+  yaxis: {
+    title: 'Number of tweets',
+    titlefont: {
+      family: 'Courier New, monospace',
+      size: 18,
+      color: 'red'
+    }
+  }
+};
+
+                Plotly.newPlot('chart', data,layout);
+
+            
+
+        } else {
+            var errorDiv = document.getElementById("error");
+            errorDiv.innerHTML = "Error getting tweets from MongoDB: " + xhr.status;
+        }
+    };
+    // make the request!
+    xhr.open("GET", url);
+    xhr.send(null);
+    chart.style.backgroundColor = "#ff0000";
+
+                    }        
+                 
+       
+    }, false);
+
+
+
+
+
+download.addEventListener("click", function () {
+
+if (filename.value)
+                    {
+
+var xhr = new XMLHttpRequest();
+
+var url = "http://localhost:8080/files/"+filename.value;
+
+xhr.onload = function() {
+
+if (xhr.status == 200) {
+
+
+
+var text = xhr.responseText;
+  
+  
+
+    if (text=="File Not Found")
+    document.getElementById("demo").innerHTML = text;
+
+    else
+    {
+  var element = document.createElement('a');
+    element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
+    element.setAttribute('download', filename.value);
+
+    element.style.display = 'none';
+    document.body.appendChild(element);
+
+    element.click();
+
+    document.body.removeChild(element);
+    }
+
+
+} else {
+var errorDiv = document.getElementById("error");
+errorDiv.innerHTML = "Error getting tweets: " + xhr.status;
+}
+};
+// make the request!
+xhr.open("GET", url);
+xhr.send(null);
+}
+
+}, false);
+
+
+
+
+save_to_mongodb.addEventListener("click", function () {
+
+if (twitter_to_save.value)
+                    {
+var xhr = new XMLHttpRequest();
+// we're calling search.php and passing in a query string
+if ((twitter_to_save.value).charAt(0)=='#')
+{
+    var s = (twitter_to_save.value).substr(1);
+    var url = "http://localhost:8080/mongodb/"+s+"/1";
+}
+
+else
+{
+    var url = "http://localhost:8080/mongodb/"+twitter_to_save.value+"/0";
+}
+
+xhr.onload = function() {
+
+if (xhr.status == 200) {
+document.getElementById("demo").innerHTML = xhr.responseText;
+
+  
+
+
+} else {
+var errorDiv = document.getElementById("error");
+errorDiv.innerHTML = "Error getting tweets: " + xhr.status;
+}
+};
+// make the request!
+xhr.open("GET", url);
+xhr.send(null);
+}
+
+}, false);
+
+
+                
+                </script>
+</body>
