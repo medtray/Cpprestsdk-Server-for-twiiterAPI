@@ -22,3 +22,11 @@ at any time, a client web browser can be run. The client enter a search term, an
  After running the server and opening a web browser using localhost:8080, we obtain this page:
  
 ![alt text](client_browser.png)
+
+For example, we save the tweets of a soccer player (Cristiano Ronaldo) in a collection in MongoDB
+
+![alt text](insert.png)
+
+Then, we show the histogram of tweets of this player
+
+![alt text](hist.png)
